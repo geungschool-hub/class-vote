@@ -162,6 +162,10 @@ footer{padding:14px 0 18px; font-size:11px; color:#a49c8a; letter-spacing:.5px;}
 <div class="top-rule"></div>
 
 <main>
+  <section class="scr on" id="scrLoad">
+    <p class="note">연결 중…</p>
+  </section>
+
   <section class="scr" id="scrErr">
     <p class="note">연결에 실패했습니다.<br>네트워크 확인 후 새로고침해 주세요.</p>
   </section>
@@ -259,9 +263,12 @@ function show(id){
 }
 function votedLocal(){ return eid && localStorage.getItem('cv.voted.'+eid)==='1'; }
 
+let gotData=false;
+setTimeout(function(){ if(!gotData) show('scrErr'); }, 12000);
 if(!FB.ready){ show('scrErr'); }
 else{
   FB.db.ref(ROOT+'/current').on('value', function(s){
+    gotData=true;
     const v=s.val()||null;
     if(v===eid) return;
     eid=v; sidOK=false; choice=null;

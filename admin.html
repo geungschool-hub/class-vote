@@ -328,11 +328,14 @@ function modal(t,s,yesLabel,danger){
 }
 
 /* ================= gate ================= */
-let dbHash=null, needSet=false;
+let dbHash=null, needSet=false, gotGate=false;
 if(!FB.ready){
   show('scrGate'); $('gateMsg').textContent='연결 실패 — 네트워크를 확인하세요'; $('gateBtn').disabled=true;
 }else{
+  show('scrGate'); $('gateBtn').disabled=true; $('gateMsg').textContent='연결 확인 중…';
+  setTimeout(function(){ if(!gotGate) $('gateMsg').textContent='연결 실패 — 네트워크를 확인하세요'; }, 12000);
   FB.db.ref(ROOT+'/teacherHash').once('value').then(function(s){
+    gotGate=true; $('gateBtn').disabled=false; $('gateMsg').textContent='';
     dbHash=s.val()||null;
     needSet=!dbHash;
     if(dbHash && localStorage.getItem(SESS)===dbHash){ unlock(); return; }
